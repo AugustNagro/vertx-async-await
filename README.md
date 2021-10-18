@@ -47,8 +47,6 @@ Future<byte[]> buildPdf() {
 
 ## Maven Coordinates
 
-(Not published yet)
-
 ```xml
 <dependency>
   <groupId>com.augustnagro</groupId>
@@ -68,17 +66,17 @@ This library requires the latest [JDK 18 Loom Preview Build](http://jdk.java.net
 Finally, `async` and `await` calls can be nested to any depth.
 
 ## Why Async-Await?
-Vertx is great.
+Vertx is great as-is.
 * It's [Wicked Fast](https://www.techempower.com/benchmarks/#section=data-r20&hw=ph&test=composite&l=zik0vz-sf)
 * Has great [docs](https://vertx.io/docs/vertx-core/java/#_in_the_beginning_there_was_vert_x)
 * There's a huge [ecosystem of libraries](https://vertx.io/docs/) under the official Vertx banner, from database connectors to network proxies.
 * Because the actor-like [Verticles](https://vertx.io/docs/vertx-core/java/#_verticles) always execute your program on the same event-loop thread, you can code as if you're writing a single-threaded application, despite using Futures!
 
 But there are some downsides too.
-* Stack traces are meaningless if the Exception is thrown in a different thread than your Verticle's. For example, when `pgClient.prepareQuery("SELEC * FROM my_table").execute()` fails, any logged stacktrace won't show you where this code is. This is because the postgress client maintains its own pool of threads.
-* It's hard to debug big Future chains in IDEs
 * Often it's difficult to express something with the Future API, when it is trivial with simple blocking code.
 * Vertx Future is not stack-safe. Ie, it will StackOverflow if you recursively call flatMap.
+* It's hard to debug big Future chains in IDEs
+* Stack traces are meaningless if the Exception is thrown in a different thread than your Vertx Context. For example, when `pgClient.prepareQuery("SELEC * FROM my_table").execute()` fails, any logged stacktrace won't show you where this code is. This is because the postgress client maintains its own pool of threads.
 
 Project Loom solves all four issues. (Debugging support is not working yet in IDEs for the current JDK Preview).
 
