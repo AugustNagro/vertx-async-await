@@ -57,6 +57,8 @@ Future<byte[]> buildPdf() {
 
 This library requires the latest [JDK 18 Loom Preview Build](http://jdk.java.net/loom/) and depends on `vertx-core` v. 4.1.5.
 
+WARNING: this library uses class [Continuation](https://download.java.net/java/early_access/loom/docs/api/java.base/java/lang/Continuation.html), which has recently [been made private](https://mail.openjdk.java.net/pipermail/loom-dev/2021-October/002983.html) in the Loom OpenJDK fork. It is likely that `await()` will eventually be possible in Loom with a different abstraction, whether that's a restricted Continuation API, or a custom virtual thread scheduler. However, it goes without saying not to use this in production until Loom is merged into OpenJDK.
+
 ## Docs:
 
 `async` executes some code with a Coroutine. Within the `async` scope, you can `await` Futures and program in an imperative style. Stack traces are also significantly improved in the case of errors.
