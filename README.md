@@ -3,8 +3,8 @@
 Async-Await support for [Vertx](https://vertx.io/) using [Project Loom](https://wiki.openjdk.java.net/display/loom/Main).
 
 ```java
-import static com.augustnagro.vertx.loom.VertxLoom.async;
-import static com.augustnagro.vertx.loom.VertxLoom.await;
+import static com.augustnagro.vaa.Async.async;
+import static com.augustnagro.vaa.Async.await;
 
 Future<byte[]> buildPdf() {
   return async(() -> {
@@ -50,7 +50,7 @@ Future<byte[]> buildPdf() {
 ```xml
 <dependency>
   <groupId>com.augustnagro</groupId>
-  <artifactId>vertx-loom</artifactId>
+  <artifactId>vertx-async-await</artifactId>
   <version>0.1.0</version>
 </dependency>
 ```
