@@ -1,4 +1,4 @@
-# Vertx-Loom
+# Vertx-Async-Await
 
 Async-Await support for [Vertx](https://vertx.io/) using [Project Loom](https://wiki.openjdk.java.net/display/loom/Main).
 
