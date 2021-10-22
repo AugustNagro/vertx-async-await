@@ -6,11 +6,11 @@
 
   <groupId>com.augustnagro</groupId>
   <artifactId>vertx-async-await</artifactId>
-  <version>0.1.1-SNAPSHOT</version>
+  <version>0.1.0</version>
 
   <name>Vertx Async-Await</name>
   <description>Async-Await support for Vertx using Virtual Threads</description>
-  <url>https://github.com/AugustNagro/vertx-loom</url>
+  <url>https://github.com/AugustNagro/vertx-async-await</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
