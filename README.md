@@ -51,19 +51,17 @@ Future<byte[]> buildPdf() {
 <dependency>
   <groupId>com.augustnagro</groupId>
   <artifactId>vertx-loom</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
 This library requires the latest [JDK 18 Loom Preview Build](http://jdk.java.net/loom/) and depends on `vertx-core` v. 4.1.5.
 
-WARNING: this library uses class [Continuation](https://download.java.net/java/early_access/loom/docs/api/java.base/java/lang/Continuation.html), which has recently [been made private](https://mail.openjdk.java.net/pipermail/loom-dev/2021-October/002983.html) in the Loom OpenJDK fork. It is likely that `await()` will eventually be possible in Loom with a different abstraction, whether that's a restricted Continuation API, or a custom virtual thread scheduler. However, it goes without saying not to use this in production until Loom is merged into OpenJDK.
-
 ## Docs:
 
 `async` executes some code with a Coroutine. Within the `async` scope, you can `await` Futures and program in an imperative style. Stack traces are also significantly improved in the case of errors.
 
-`async` can only be called on threads with a Vertx Context (this is always the case when using Verticles). No new threads, virtual or otherwise, are created.
+`async` can only be called on threads with a Vertx Context (this is always the case when using Verticles). No new platform threads are created; all execution is done on the thread that calls async(). This means you can program Verticles [without worrying about synchronization](https://vertx.io/docs/vertx-core/java/#_standard_verticles).
 
 Finally, `async` and `await` calls can be nested to any depth.
 
@@ -90,3 +88,7 @@ This API was beautiful and exactly how Virtual Threads should be used; spawn one
 
 Months later, I saw this Scala [monadic-reflection](https://github.com/lampepfl/monadic-reflection) library using Loom's low-level Continuation api. Inspired, I implemented a vertx-specialized Coroutine that can be suspended and resumed, which is enough to implement `async` and `await`.
 
+After sharing to the vertx-dev and loom-dev mailing lists, I learned that the Continuation API turned out to be unsafe and was made jdk-private. After playing with Virtual Threads, I found that the Coroutine I had made could be re-implemented with a Virtual Thread and simple Reentrant Lock. For the execution to remain on the correct Vertx Thread, I set the Executor to use Context::runOnContext instead of the default ForkJoinPool. Finally, ThreadLocals are used to keep track of the Coroutine and Vertx Context; in the future these can be replaced by ScopeLocals when their JEP is approved.
+
+## See Also
+The same library, but for the JDK's CompletionStage: https://github.com/AugustNagro/java-async-await

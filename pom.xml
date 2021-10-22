@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.augustnagro</groupId>
-  <artifactId>vertx-loom</artifactId>
+  <artifactId>vertx-async-await</artifactId>
   <version>0.1.1-SNAPSHOT</version>
 
-  <name>Vertx-Loom</name>
-  <description>Async-Await support for Vertx using Project Loom</description>
+  <name>Vertx Async-Await</name>
+  <description>Async-Await support for Vertx using Virtual Threads</description>
   <url>https://github.com/AugustNagro/vertx-loom</url>
 
   <properties>
@@ -37,9 +37,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/AugustNagro/vertx-loom</url>
-    <connection>scm:git:git@github.com:augustnagro/vertx-loom.git</connection>
-    <developerConnection>scm:git:git@github.com:augustnagro/vertx-loom.git</developerConnection>
+    <url>https://github.com/AugustNagro/vertx-async-await</url>
+    <connection>scm:git:git@github.com:augustnagro/vertx-async-await.git</connection>
+    <developerConnection>scm:git:git@github.com:augustnagro/vertx-async-await.git</developerConnection>
   </scm>
 
   <distributionManagement>

@@ -6,8 +6,8 @@ import io.vertx.ext.web.RoutingContext;
 
 import java.util.concurrent.CompletableFuture;
 
-import static org.getshaka.vertx.loom.VertxLoom.async;
-import static org.getshaka.vertx.loom.VertxLoom.await;
+import static com.augustnagro.vaa.Async.async;
+import static com.augustnagro.vaa.Async.await;
 
 public class TestVerticle extends AbstractVerticle {
 
@@ -42,8 +42,8 @@ public class TestVerticle extends AbstractVerticle {
         return x;
       }));
 
-      return "The sum is: " + a + b + a1 + c;
-    });
+      return "The num is: " + a + b + a1 + c;
+    }).onFailure(Throwable::printStackTrace);
   }
 
   private Future<Integer> a() {

@@ -1,10 +1,7 @@
-import io.vertx.core.Context;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.RunTestOnContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
-import org.getshaka.vertx.loom.VertxLoom;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,8 +10,8 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.getshaka.vertx.loom.VertxLoom.async;
-import static org.getshaka.vertx.loom.VertxLoom.await;
+import static com.augustnagro.vaa.Async.async;
+import static com.augustnagro.vaa.Async.await;
 
 @RunWith(VertxUnitRunner.class)
 public class UnitTests {
@@ -48,11 +45,6 @@ public class UnitTests {
     });
 
     future.onComplete(ctx.asyncAssertSuccess());
-  }
-
-  @Test(expected = RuntimeException.class)
-  public void testAwaitOutsideAsync() {
-    await(Future.succeededFuture());
   }
 
   @Test
