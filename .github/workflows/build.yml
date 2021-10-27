@@ -6,7 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code
       - uses: actions/checkout@v2
       - uses: renatoathaydes/setup-java-sdkman@v2.x
         with:
@@ -17,3 +16,4 @@ jobs:
       - name: Publish Test Report
         if: ${{ always() }}
         uses: scacap/action-surefire-report@v1
+              
