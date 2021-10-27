@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: renatoathaydes/setup-java-sdkman@v2.x
+      - uses: renatoathaydes/setup-java-sdkman@2.1.1
         with:
           java-version: '18.ea.2.lm-open'
           cache: 'maven'
