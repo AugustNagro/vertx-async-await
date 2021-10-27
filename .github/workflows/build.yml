@@ -1,0 +1,19 @@
+name: Java CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+      - uses: actions/checkout@v2
+      - uses: renatoathaydes/setup-java-sdkman@v2.x
+        with:
+          java-version: '18.ea.2.lm-open'
+          cache: 'maven'
+      - name: Build with Maven
+        run: mvn test
+      - name: Publish Test Report
+        if: ${{ always() }}
+        uses: scacap/action-surefire-report@v1
