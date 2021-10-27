@@ -49,8 +49,8 @@ public class Async {
         AWAIT_CONTEXT.set(new Coroutine(finalAsyncCtx.vertxContext));
         promise.complete(fn.call());
         AWAIT_CONTEXT.remove();
-      } catch (Exception e) {
-        promise.fail(e);
+      } catch (Throwable t) {
+        promise.fail(t);
       }
     }).start();
 
