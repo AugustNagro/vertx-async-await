@@ -10,7 +10,6 @@ jobs:
       - uses: renatoathaydes/setup-java-sdkman@2.1.1
         with:
           java-version: '18.ea.2.lm-open'
-          cache: 'maven'
       - name: Build with Maven
         run: mvn test
       - name: Publish Test Report
