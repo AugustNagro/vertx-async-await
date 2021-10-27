@@ -41,10 +41,39 @@ public class UnitTests {
         .toList();
 
       byte[] pdf = await(buildPdf(userNames));
+      System.out.println("Generated pdf for user ids: " + userIds);
       return pdf;
     });
 
     future.onComplete(ctx.asyncAssertSuccess());
+  }
+
+  @Test
+  public void testSimpleFlatMap(TestContext ctx) {
+    Future<byte[]> future = userIdsFromDb().flatMap(userIds -> {
+
+      Future<List<String>> userNamesFuture =
+        Future.succeededFuture(new ArrayList<>());
+
+      for (Long userId : userIds) {
+        userNamesFuture = userNamesFuture.flatMap(list -> {
+          return userNameFromSomeApi(userId)
+            .map(userName -> {
+              list.add(userName);
+              return list;
+            });
+        });
+      }
+
+      return userNamesFuture.flatMap(userNames -> {
+        return buildPdf(userNames)
+          .onComplete(__ ->
+            System.out.println("Generated pdf for user ids: " + userIds)
+          );
+      });
+    });
+
+    future.onComplete(ctx.asyncAssertSuccess(pdf -> ctx.assertEquals(0, pdf.length)));
   }
 
   @Test

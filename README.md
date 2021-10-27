@@ -8,17 +8,14 @@ import static com.augustnagro.vaa.Async.await;
 
 Future<byte[]> buildPdf() {
   return async(() -> {
-    
     List<Long> userIds = await(userIdsFromDb());
-    
-    List<String> userNames = new ArrayList<>(userIds.size());
-    for (Long id : userIds) {
-      userNames.add(await(userNameFromSomeApi(id)))
-    }
-    
-    byte[] pdf = await(somePdfBuilder(userIds))
-  
-    System.out.println(userIds);
+
+    List<String> userNames = userIds.stream()
+      .map(id -> await(userNameFromSomeApi(id)))
+      .toList();
+
+    byte[] pdf = await(buildPdf(userNames));
+    System.out.println("Generated pdf for user ids: " + userIds);
     return pdf;
   });
 }
@@ -28,21 +25,28 @@ vs.
 
 ```java
 Future<byte[]> buildPdf() {
-  userIdsFromDb().flatMap(userIds -> {
-    List<Future<String>> userNameFutures = new ArrayList<>(userIds.size());
-    // note that we could flood the api here by starting all futures at once!
-    for (Long id : userIds) {
-      userNameFutures.add(userNameFromSomeApi(id));
+  return userIdsFromDb().flatMap(userIds -> {
+    Future<List<String>> userNamesFuture =
+      Future.succeededFuture(new ArrayList<>());
+  
+    for (Long userId : userIds) {
+      userNamesFuture = userNamesFuture.flatMap(list -> {
+        return userNameFromSomeApi(userId)
+          .map(userName -> {
+            list.add(userName);
+            return list;
+          });
+      });
     }
-    return CompositeFuture.all(userNameFutures).flatMap(compositeFuture -> {
-      List<String> userNames = compositeFuture.list();
-      return somePdfBuilder(userNames)
-        .onSuccess(pdf -> {
-          System.out.prinln(userIds);
-        });
+  
+    return userNamesFuture.flatMap(userNames -> {
+      return buildPdf(userNames)
+        .onComplete(__ ->
+          System.out.println("Generated pdf for user ids: " + userIds)
+        );
     });
-  });
-}
+});
+
 ```
 
 ## Maven Coordinates
