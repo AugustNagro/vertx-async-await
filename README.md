@@ -55,7 +55,7 @@ Future<byte[]> buildPdf() {
 <dependency>
   <groupId>com.augustnagro</groupId>
   <artifactId>vertx-async-await</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
 </dependency>
 ```
 
