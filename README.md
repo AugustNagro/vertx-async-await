@@ -3,8 +3,8 @@
 Async-Await support for [Vertx](https://vertx.io/) using [Project Loom](https://wiki.openjdk.java.net/display/loom/org.getshaka.vertx.loom.SequencingBugTests).
 
 ```java
-import static com.augustnagro.vertx.loom.VertxLoom.async;
-import static com.augustnagro.vertx.loom.VertxLoom.await;
+import static com.augustnagro.vertx.loom.AsyncAwait.async;
+import static com.augustnagro.vertx.loom.AsyncAwait.await;
 
 Future<byte[]> buildPdf() {
   return async(() -> {
