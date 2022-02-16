@@ -4,19 +4,19 @@ Async-Await support for [Vertx](https://vertx.io/) using [Project Loom](https://
 
 ```java
 import static com.augustnagro.vertx.loom.VertxLoom.async;
-import static com.augustnagro.vertx.loom.VertxLoom.coroutine;
+import static com.augustnagro.vertx.loom.VertxLoom.await;
 
 Future<byte[]> buildPdf() {
   return async(() -> {
     
-    List<Long> userIds = coroutine(userIdsFromDb());
+    List<Long> userIds = await(userIdsFromDb());
     
     List<String> userNames = new ArrayList<>(userIds.size());
     for (Long id : userIds) {
-      userNames.add(coroutine(userNameFromSomeApi(id)))
+      userNames.add(await(userNameFromSomeApi(id)))
     }
     
-    byte[] pdf = coroutine(somePdfBuilder(userIds))
+    byte[] pdf = await(somePdfBuilder(userIds))
   
     System.out.println(userIds);
     return pdf;
@@ -96,7 +96,7 @@ My first stab at this problem using Virtual Threads failed. I forked [vertx-gen]
 
 This API was beautiful and exactly how Virtual Threads should be used; spawn one for every request and don't worry about blocking them. The big problem is that there's no way to actually block Vert'x Future, which is an interface with unbounded implementations. For this prototype I converted the Future to a Java CompletableFuture, which can be joined: `myFuture.toCompletionStage().toCompletableFuture().join()`. This turns out to be really, really, not good (it essentially spawns another thread that loops until the Future reports completion).
 
-Months later, I saw this Scala [monadic-reflection](https://github.com/lampepfl/monadic-reflection) library using Loom's low-level Continuation api. Inspired, I implemented a vertx-specialized Coroutine that can be suspended and resumed, which is enough to implement `async` and `coroutine`.
+Months later, I saw this Scala [monadic-reflection](https://github.com/lampepfl/monadic-reflection) library using Loom's low-level Continuation api. Inspired, I implemented a vertx-specialized Coroutine that can be suspended and resumed, which is enough to implement `async` and `await`.
 
 
 # Testing Notes:
