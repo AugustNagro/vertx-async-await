@@ -6,7 +6,7 @@ import io.vertx.core.Future;
 class Coroutine extends Continuation {
   private final ContinuationScope scope;
 
-  private Object channel = null;
+  private volatile Object channel = null;
 
   Coroutine(ContinuationScope scope, Runnable prog) {
     super(scope, prog);
@@ -33,15 +33,19 @@ class Coroutine extends Continuation {
       if (ar.succeeded()) {
         resume(ar.result());
       } else {
-        throwAsUnchecked(ar.cause());
+        resume(ar.cause());
       }
     });
 
     Continuation.yield(scope);
-    // When the future completes, it will call resume(). resume() will set
-    // channel equal to the Future's resolved value, and continue the continuation,
-    // executing the line below..
-    return (A) channel;
+
+    Object chan = channel;
+    if (chan instanceof Throwable t) {
+      throwAsUnchecked(t);
+      throw new UnsupportedOperationException("Unreachable");
+    } else {
+      return (A) chan;
+    }
   }
 
   /**
