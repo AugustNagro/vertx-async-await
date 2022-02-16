@@ -58,7 +58,7 @@ Future<byte[]> buildPdf() {
 <dependency>
   <groupId>com.augustnagro</groupId>
   <artifactId>vertx-loom</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1</version>
 </dependency>
 ```
 
