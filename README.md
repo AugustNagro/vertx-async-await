@@ -90,14 +90,5 @@ But there are some downsides too.
 
 Project Loom solves all three issues. The goal of this project is to combine the performance of Vertx's event loop with the productivity of Loom's synchronous programming model.
 
-## Implementation Details
-
-My first stab at this problem using Virtual Threads failed. I forked [vertx-gen](https://github.com/vert-x3/vertx-rx) and made most methods returning `Future<T>` instead join the Future and return T. Then for some methods like `Route.handle(..)` I spawned virtual threads.
-
-This API was beautiful and exactly how Virtual Threads should be used; spawn one for every request and don't worry about blocking them. The big problem is that there's no way to actually block Vert'x Future, which is an interface with unbounded implementations. For this prototype I converted the Future to a Java CompletableFuture, which can be joined: `myFuture.toCompletionStage().toCompletableFuture().join()`. This turns out to be really, really, not good (it essentially spawns another thread that loops until the Future reports completion).
-
-Months later, I saw this Scala [monadic-reflection](https://github.com/lampepfl/monadic-reflection) library using Loom's low-level Continuation api. Inspired, I implemented a vertx-specialized Coroutine that can be suspended and resumed, which is enough to implement `async` and `await`.
-
-
 # Testing Notes:
 * the `io.vertx.ext.unit.junit.RunTestOnContext` JUnit 4 rule is not working with this. See the simple implementation of `asyncTest` in this project.
