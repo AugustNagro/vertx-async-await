@@ -32,8 +32,8 @@ public class UnitTests {
       List<Long> userIds = await(userIdsFromDb());
 
       List<String> userNames = userIds.stream()
-          .map(id -> await(userNameFromSomeApi(id)))
-          .toList();
+        .map(id -> await(userNameFromSomeApi(id)))
+        .toList();
 
       byte[] pdf = await(buildPdf(userNames));
       assertNotNull(pdf);

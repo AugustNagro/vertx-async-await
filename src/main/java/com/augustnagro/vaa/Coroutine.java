@@ -1,15 +1,22 @@
 package com.augustnagro.vaa;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Context;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
+import io.vertx.core.impl.ContextInternal;
+import io.vertx.core.impl.future.FutureInternal;
+import io.vertx.core.impl.future.Listener;
 
 class Coroutine extends Continuation {
-  private final ContinuationScope scope;
+  final ContinuationScope scope;
+  final Context ctx;
 
   private volatile Object channel = null;
 
-  Coroutine(ContinuationScope scope, Runnable prog) {
+  Coroutine(Context ctx, ContinuationScope scope, Runnable prog) {
     super(scope, prog);
+    this.ctx = ctx;
     this.scope = scope;
   }
 
@@ -29,13 +36,16 @@ class Coroutine extends Continuation {
       }
     }
 
-    future.onComplete((AsyncResult<A> ar) -> {
-      if (ar.succeeded()) {
-        resume(ar.result());
-      } else {
-        resume(ar.cause());
-      }
+    ctx.runOnContext(v -> {
+      future.onComplete((AsyncResult<A> ar) -> {
+        if (ar.succeeded()) {
+          resume(ar.result());
+        } else {
+          resume(ar.cause());
+        }
+      });
     });
+
 
     Continuation.yield(scope);
 

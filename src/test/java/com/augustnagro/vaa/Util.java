@@ -1,6 +1,6 @@
 package com.augustnagro.vaa;
 
-import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 
 import java.util.concurrent.ExecutionException;
@@ -12,15 +12,20 @@ public class Util {
 
   public static void asyncTest(AsyncTestBody testBody) {
     Vertx vertx = Vertx.vertx()
-        .exceptionHandler(Throwable::printStackTrace);
+      .exceptionHandler(Throwable::printStackTrace);
 
-    Future<Void> future = async(() -> {
-      testBody.apply(vertx);
-      return null;
+    Promise<Void> promise = Promise.promise();
+    vertx.runOnContext(v -> {
+      async(() -> {
+        testBody.apply(vertx);
+        return null;
+      })
+        .onSuccess(x -> promise.complete())
+        .onFailure(promise::fail);
     });
 
     try {
-      future.toCompletionStage().toCompletableFuture().get(5, TimeUnit.SECONDS);
+      promise.future().toCompletionStage().toCompletableFuture().get(5, TimeUnit.SECONDS);
     } catch (ExecutionException e) {
       throwAsUnchecked(e.getCause());
     } catch (Throwable t) {
