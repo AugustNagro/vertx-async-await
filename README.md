@@ -2,6 +2,8 @@
 
 Async-Await support for [Vertx](https://vertx.io/) using [Project Loom](https://wiki.openjdk.java.net/display/loom/org.getshaka.vertx.loom.SequencingBugTests).
 
+Please note that this project is deprecated in favor of https://github.com/vert-x3/vertx-virtual-threads-incubator
+
 ```java
 import static com.augustnagro.vertx.loom.AsyncAwait.async;
 import static com.augustnagro.vertx.loom.AsyncAwait.await;
